@@ -1,16 +1,10 @@
 const express = require('express');
 const app = express();
+const route = express.Router();
 
-const reqFilter = (req, res, next)=>{
-    if(!req.query.age){
-        res.send("Please enter age.")
-    }else if(req.query.age < 18){
-        res.send("You can't access this page.")
-    }else{
-        next();
-    }
-}
-app.use(reqFilter);
+const reqFilter = require('./Middleware');
+// app.use(reqFilter);  // Application level middleware.
+route.use(reqFilter);   // Router level middleware.
 
 app.get('/', (req, res) => {
     res.send('I am home page')
@@ -19,5 +13,15 @@ app.get('/', (req, res) => {
 app.get('/users', (req, res) => {
     res.send('I am users page')
 })
+
+route.get('/about', (req, res) => {
+    res.send('I am about page')
+})
+
+route.get('/contact', (req, res) => {
+    res.send('I am contact page')
+})
+
+app.use('/',route);
 
 app.listen(4545);
